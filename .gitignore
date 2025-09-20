@@ -55,3 +55,9 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Python venv
+venv/
+env/
+
+.DS_Store
