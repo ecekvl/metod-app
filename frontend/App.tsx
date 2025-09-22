@@ -1,57 +1,37 @@
-import React from "react";
-import { SafeAreaView, View, Text, StyleSheet, Image } from "react-native";
+import { View, Text } from "react-native";
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 
-export default function App() {
+import { API_BASE } from "@env";
+
+const LIST_URL = `${API_BASE}/api/recipes/`;
+const queryClient = new QueryClient();
+
+function Recipes() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["recipes"],
+    queryFn: () => fetch(LIST_URL).then((r) => r.json()),
+  });
+
+  if (isLoading) return <Text>Loading…</Text>;
+  if (error) return <Text>Error</Text>;
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Metod</Text>
-
-      <View style={styles.card}>
-      <Image source={require("./assets/noodle.png")} style={styles.image} />
-
-        <View style={styles.cardContent}>
-          <Text style={styles.recipeTitle}>🍜 Spicy Garlic Noodles</Text>
-          <Text style={styles.meta}>3 ingredients · 15 mins</Text>
+    <View style={{ padding: 16 }}>
+      <Text style={{ fontSize: 24, fontWeight: "700", marginBottom: 12 }}>Metod</Text>
+      {data.map((r: any) => (
+        <View key={r.id} style={{ marginBottom: 12 }}>
+          <Text>{r.title}</Text>
+          <Text>{r.photo}</Text>{/* keep it simple: just show the URL for now */}
         </View>
-      </View>
-    </SafeAreaView>
+      ))}
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "700",
-    marginBottom: 20,
-  },
-  card: {
-    borderRadius: 12,
-    backgroundColor: "#f9f9f9",
-    overflow: "hidden",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  image: {
-    width: "100%",
-    height: 160,
-  },
-  cardContent: {
-    padding: 12,
-  },
-  recipeTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  meta: {
-    fontSize: 14,
-    color: "#666",
-  },
-});
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Recipes />
+    </QueryClientProvider>
+  );
+}

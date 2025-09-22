@@ -18,6 +18,9 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 
+# Compiled Python files
+*.cpython-*
+
 # Metro
 .metro-health-check*
 
@@ -26,12 +29,13 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 
-# macOS
+# macOS junk
 .DS_Store
 *.pem
 
 # local env files
 .env*.local
+env.d.ts
 
 # typescript
 *.tsbuildinfo
